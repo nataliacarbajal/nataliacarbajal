@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koala Store — Natalia Carbajal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+    <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #fffef8; --lila: #7a85ed; --lila-lt: #dedefc;
+      --yellow: #ffe8a8; --yellow-dk: #f0c84a; --ink: #333333; --mid: #777; --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); color: var(--ink); font-family: 'Work Sans', sans-serif; font-weight: 400; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(255,254,248,0.93); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--lila-lt);
+    }
+    .nav-logo img { height: 60px; width: auto; display: block; filter: brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(500%) hue-rotate(200deg) brightness(100%); }
+    .nav-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 600; color: var(--lila); text-decoration: none; transition: gap 0.2s; }
+    .nav-back:hover { gap: 0.8rem; }
+    .proj-hero {
+      min-height: 70vh; display: flex; align-items: flex-end;
+      padding: 8rem 3rem 4rem; position: relative; overflow: hidden; background: var(--lila-lt);
+    }
+    .proj-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+    .proj-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(122,133,237,0.75) 0%, rgba(122,133,237,0.2) 55%, transparent 100%);
+      z-index: 1;
+    }
+    .proj-hero-content { position: relative; z-index: 2; max-width: 1100px; width: 100%; }
+    .proj-tag { display: inline-block; font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; background: var(--yellow); color: var(--ink); padding: 0.25rem 0.8rem; border-radius: 50px; margin-bottom: 1rem; }
+    .proj-title { font-family: 'Georgia', serif; font-style: italic; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 500; color: #fff; line-height: 1.1; margin-bottom: 0.6rem; }
+    .proj-subtitle { font-size: 1rem; color: rgba(255,255,255,0.85); max-width: 600px; line-height: 1.7; }
+    .proj-body { max-width: 1100px; margin: 0 auto; padding: 5rem 3rem; }
+    .proj-intro { font-size: 1.05rem; color: var(--ink); line-height: 1.9; margin-bottom: 3rem; }
+    .proj-intro strong { color: var(--lila); font-weight: 600; }
+    .proj-meta {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+      background: var(--white); border-radius: 16px; padding: 2rem;
+      margin-bottom: 3.5rem; border: 1px solid var(--lila-lt);
+    }
+    .meta-block h4 { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lila); font-weight: 700; margin-bottom: 0.8rem; }
+    .meta-block ul { list-style: none; }
+    .meta-block ul li { font-size: 0.88rem; color: var(--ink); padding: 0.3rem 0; border-bottom: 1px solid #f0eff5; display: flex; align-items: center; gap: 0.5rem; }
+    .meta-block ul li::before { content: '·'; color: var(--lila); font-weight: 700; }
+    .meta-block ul li:last-child { border-bottom: none; }
+    .tools-list { font-size: 0.88rem; color: var(--mid); line-height: 1.9; }
+    .proj-gallery { margin-bottom: 3.5rem; }
+    .proj-gallery h3 { font-family: 'Georgia', serif; font-style: italic; font-size: 1.4rem; color: var(--lila); margin-bottom: 1.5rem; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; padding: 2rem; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; transition: transform 0.25s ease; cursor: zoom-in; }
+    .lightbox-close { position: fixed; top: 1.5rem; right: 2rem; font-size: 2rem; color: #fff; cursor: pointer; line-height: 1; background: none; border: none; }
+    .proj-nav { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--lila-lt); padding-top: 2.5rem; margin-top: 2rem; }
+    .proj-nav a { font-size: 0.82rem; font-weight: 600; color: var(--lila); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: gap 0.2s; }
+    .proj-nav a:hover { gap: 0.8rem; }
+    .proj-nav .center { text-align: center; font-size: 0.75rem; color: var(--mid); }
+    footer { background: var(--lila); color: rgba(255,255,255,0.85); font-size: 0.75rem; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+    footer a { color: var(--yellow); text-decoration: none; }
+    @media (max-width: 768px) {
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-logo img { height: 44px; }
+      .nav-back { font-size: 0.75rem; }
+      .proj-hero { padding: 7rem 1.2rem 2.5rem; }
+      .proj-body { padding: 2.5rem 1.2rem; }
+      .proj-meta { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-grid img { grid-column: 1 !important; grid-row: auto !important; aspect-ratio: 4/3 !important; max-height: none !important; height: auto !important; min-height: 0 !important; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="Natalia Carbajal" /></a>
+    <a href="index.html#proyectos" class="nav-back">← Volver a proyectos</a>
+  </nav>
+  <div class="proj-hero">
+    <img class="proj-hero-bg" src="proj-koalastore1.jpg" alt="" />
+    <div class="proj-hero-content">
+      <span class="proj-tag">Identidad Visual</span>
+      <h1 class="proj-title">Koala Store</h1>
+      <p class="proj-subtitle">Proyecto académico de branding para una tienda especializada en juguetes eco-friendly para bebés.</p>
+    </div>
+  </div>
+  <div class="proj-body">
+    <p class="proj-intro">El proyecto contempló la <strong>creación integral de la marca</strong>, desde la investigación estratégica hasta el desarrollo de la identidad visual y sus aplicaciones. Inspirada en la relación entre naturaleza, aprendizaje y desarrollo infantil, la marca fue concebida para promover experiencias de juego que estimulen el crecimiento cognitivo mediante juguetes elaborados con materiales naturales.</p>
+    <div class="proj-meta">
+      <div class="meta-block"><h4>Aplicaciones</h4><ul>
+          <li>Estrategia y posicionamiento de marca</li>
+          <li>Naming e identidad visual</li>
+          <li>Diseño de personaje e ilustraciones</li>
+          <li>Redes sociales y comunicación digital</li>
+          <li>Aplicaciones para punto de venta</li>
+          <li>Activación de lanzamiento</li>
+      </ul></div>
+      <div class="meta-block"><h4>Herramientas</h4><p class="tools-list">Adobe Illustrator · Adobe Photoshop</p></div>
+    </div>
+    <div class="proj-gallery">
+            <h3>Galería del proyecto</h3>
+      <div class="gallery-grid">
+        <img src="proj-koalastore1.jpg" alt="" onclick="openLightbox(this.src)" style="grid-column:span 2;width:100%;border-radius:16px;object-fit:cover;display:block;max-height:580px;cursor:zoom-in;" />
+        <div style="display:contents">
+        <img src="proj-koalastore2.jpg" alt="" onclick="openLightbox(this.src)" style="grid-row:span 2;width:100%;border-radius:16px;object-fit:cover;display:block;height:100%;min-height:400px;cursor:zoom-in;" />
+        <img src="proj-koalastore3.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore4.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore5.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore6.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <div style="display:contents">
+        <img src="proj-koalastore7.jpg" alt="" onclick="openLightbox(this.src)" style="grid-row:span 2;width:100%;border-radius:16px;object-fit:cover;display:block;height:100%;min-height:400px;cursor:zoom-in;" />
+        <img src="proj-koalastore8.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore9.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore10.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore11.jpg" alt="" onclick="openLightbox(this.src)" style="width:100%;border-radius:16px;object-fit:cover;display:block;aspect-ratio:4/3;cursor:zoom-in;" />
+        <img src="proj-koalastore12.jpg" alt="" onclick="openLightbox(this.src)" style="grid-column:span 2;width:100%;border-radius:16px;object-fit:cover;display:block;max-height:440px;cursor:zoom-in;" />
+      </div>
+    </div>
+    <div class="proj-nav">
+      <a href="proyecto-waykuq.html">← Proyecto anterior</a>
+      <span class="center">Natalia Carbajal · Portafolio</span>
+      <a href="proyecto-experiencia.html">Siguiente proyecto →</a>
+    </div>
+  </div>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+  </div>
+  <footer>
+    <span>© 2026 Natalia Carbajal — Diseñadora Visual & Gráfica</span>
+    <span>Lima, Perú · <a href="mailto:nataliacarbajal.f@outlook.com">nataliacarbajal.f@outlook.com</a></span>
+  </footer>
+    <script>
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // reset zoom on open
+      document.getElementById('lightbox-img').style.transform = 'scale(1)';
+      document.getElementById('lightbox-img').dataset.zoomed = '0';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+    // Zoom on second click
+    document.getElementById('lightbox-img').addEventListener('click', function(e){
+      e.stopPropagation();
+      if(this.dataset.zoomed === '1'){
+        this.style.transform = 'scale(1)';
+        this.style.cursor = 'zoom-in';
+        this.dataset.zoomed = '0';
+      } else {
+        this.style.transform = 'scale(2)';
+        this.style.transformOrigin = '50% 50%';
+        this.style.cursor = 'zoom-out';
+        this.dataset.zoomed = '1';
+      }
+    });
+  </script>
+</body>
+</html>
